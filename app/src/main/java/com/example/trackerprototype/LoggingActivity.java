@@ -16,7 +16,8 @@ import android.widget.TextView;
 public class LoggingActivity extends AppCompatActivity {
 
     private static final String[] REQUIRED_PERMISSIONS = {
-            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
     };
     private static final int PERMISSION_CODE = 1;
 
