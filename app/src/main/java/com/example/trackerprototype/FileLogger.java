@@ -36,7 +36,7 @@ import java.util.Locale;
 public class FileLogger implements GnssListener {
 
     private static final String TAG = "FileLogger";
-    private static final String FILE_PREFIX = "gnss_log";
+    private static final String FILE_PREFIX = "gnss_logger";
     private static final String ERROR_WRITING_FILE = "Problem writing to file.";
     private static final String COMMENT_START = "# ";
     private static final char RECORD_DELIMITER = ',';
@@ -63,8 +63,9 @@ public class FileLogger implements GnssListener {
             File baseDirectory;
             String state = Environment.getExternalStorageState();
             if (Environment.MEDIA_MOUNTED.equals(state)) {
-                baseDirectory = new File(Environment.getExternalStorageDirectory(), FILE_PREFIX);
-                baseDirectory.mkdirs();
+                baseDirectory = new File(mContext.getExternalFilesDir(null), FILE_PREFIX);
+                boolean madedirs = baseDirectory.mkdirs();
+                System.out.println(madedirs);
             } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
                 logError("Cannot write to external storage.");
                 return;
@@ -80,7 +81,7 @@ public class FileLogger implements GnssListener {
             String currentFilePath = currentFile.getAbsolutePath();
             BufferedWriter currentFileWriter;
             try {
-                currentFileWriter = new BufferedWriter(new FileWriter(currentFile));
+                currentFileWriter = new BufferedWriter(new FileWriter(currentFilePath));
             } catch (IOException e) {
                 logException("Could not open file: " + currentFilePath, e);
                 return;
@@ -178,19 +179,19 @@ public class FileLogger implements GnssListener {
      * Send the current log via email or other options selected from a pop menu shown to the user. A
      * new log is started when calling this function.
      */
-    public void send() {
+    public void close() {
         if (mFile == null) {
             return;
         }
 
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setType("*/*");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SensorLog");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-        // attach the file
-        Uri fileURI =
-                FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider", mFile);
-        emailIntent.putExtra(Intent.EXTRA_STREAM, fileURI);
+//        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+//        emailIntent.setType("*/*");
+//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SensorLog");
+//        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+//        // attach the file
+//        Uri fileURI =
+//                FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider", mFile);
+//        emailIntent.putExtra(Intent.EXTRA_STREAM, fileURI);
 //        getUiComponent().startActivity(Intent.createChooser(emailIntent, "Send log.."));
         if (mFileWriter != null) {
             try {
