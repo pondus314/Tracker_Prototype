@@ -1,20 +1,15 @@
 package com.example.trackerprototype;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.logging.Logger;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class LoggingActivity extends AppCompatActivity {
 
@@ -41,27 +36,23 @@ public class LoggingActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_CODE:
-                // If request is cancelled, the result arrays are empty.
-                boolean permissions_denied = false;
-                if (grantResults.length == REQUIRED_PERMISSIONS.length) {
-                    for(int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i]!=PackageManager.PERMISSION_GRANTED) {
-                            permissions_denied = true;
-                            break;
-                        }
+        if (requestCode == PERMISSION_CODE) {
+            boolean permissions_denied = false;
+            if (grantResults.length == REQUIRED_PERMISSIONS.length) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                        permissions_denied = true;
+                        break;
                     }
-                }  else {
-                    permissions_denied = true;
                 }
-                if(permissions_denied) {
-                    requestPermissions(this);
-                }
-                return;
-            default:
-                System.out.println("Something weird happened: permission code inexistent");
-                return;
+            } else {
+                permissions_denied = true;
+            }
+            if (permissions_denied) {
+                requestPermissions(this);
+            }
+        } else {
+            System.out.println("Something weird happened: permission code inexistent");
         }
     }
 
