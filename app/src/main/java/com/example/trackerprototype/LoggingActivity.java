@@ -2,6 +2,7 @@ package com.example.trackerprototype;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -20,8 +21,8 @@ public class LoggingActivity extends AppCompatActivity {
     };
     private static final int PERMISSION_CODE = 1;
 
-    private FileLogger mFileLogger;
-    private GnssContainer mGnssContainer;
+//    private FileLogger mFileLogger;
+//    private GnssContainer mGnssContainer;
 
     private boolean hasPermissions(Activity activity) {
         for (String permission : REQUIRED_PERMISSIONS) {
@@ -68,20 +69,25 @@ public class LoggingActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.log_data_text);
         textView.setMovementMethod(new ScrollingMovementMethod());
         requestPermissions(this);
-        mFileLogger = new FileLogger(getApplicationContext());
-        mGnssContainer = new GnssContainer(getApplicationContext(), mFileLogger);
-        mGnssContainer.registerAll();
-        mFileLogger.startNewLog();
+        startService(new Intent(this, GnssLoggerService.class));
+//        mFileLogger = new FileLogger(getApplicationContext());
+//        mGnssContainer = new GnssContainer(getApplicationContext(), mFileLogger);
+//        mGnssContainer.registerAll();
+//        mFileLogger.startNewLog();
 //        startService(new Intent(this, LoggerService.class));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mGnssContainer.unregisterAll();
     }
 
-    public void sendLog(View view) {
-        mFileLogger.close();
+    public void stopLog(View view) {
+        stopService(new Intent(this, GnssLoggerService.class));
     }
+
+//    public void sendLog(View view) {
+//        mFileLogger.close();
+//    }
+
 }

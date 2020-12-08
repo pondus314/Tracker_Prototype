@@ -183,16 +183,6 @@ public class FileLogger implements GnssListener {
         if (mFile == null) {
             return;
         }
-
-//        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-//        emailIntent.setType("*/*");
-//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SensorLog");
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-//        // attach the file
-//        Uri fileURI =
-//                FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider", mFile);
-//        emailIntent.putExtra(Intent.EXTRA_STREAM, fileURI);
-//        getUiComponent().startActivity(Intent.createChooser(emailIntent, "Send log.."));
         if (mFileWriter != null) {
             try {
                 mFileWriter.flush();
@@ -356,9 +346,11 @@ public class FileLogger implements GnssListener {
                         measurement.getAccumulatedDeltaRangeMeters(),
                         measurement.getAccumulatedDeltaRangeUncertaintyMeters(),
                         measurement.hasCarrierFrequencyHz() ? measurement.getCarrierFrequencyHz() : "",
-                        "",
-                        "",
-                        "",
+                        measurement.hasCarrierCycles() ? measurement.getCarrierCycles() : "",
+                        measurement.hasCarrierPhase() ? measurement.getCarrierPhase() : "",
+                        measurement.hasCarrierPhaseUncertainty()
+                                ? measurement.getCarrierPhaseUncertainty()
+                                : "",
                         measurement.getMultipathIndicator(),
                         measurement.hasSnrInDb() ? measurement.getSnrInDb() : "",
                         measurement.getConstellationType(),
